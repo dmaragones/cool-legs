@@ -1,0 +1,178 @@
+import java.util.Random;
+import java.util.Scanner;
+
+import javax.swing.JOptionPane;
+
+public class HiLowGame {
+	public static final int MAX_GAMES = 5, CARDS_MAX = 13;
+
+	public static void main(String[] args) {
+
+		int lastCard = 0;
+		int playerScore = 0;
+		boolean firstTime = true;
+		boolean tryAgain = true;
+		
+		boolean correctInput = false;
+		boolean finishGame = false;
+		boolean finishAll = false;
+		
+		int winStreak = 0;
+		int wins = 0;
+		
+		while (tryAgain == true)
+		{
+			int count;
+			for	(count = 0; count < MAX_GAMES && finishAll == false; count++)
+			{
+	
+				Random  generator = new Random();
+				
+				if (firstTime == true) 
+				{
+					lastCard = generator.nextInt(CARDS_MAX);
+					lastCard++;
+				}
+				
+				int	cardToGuess = generator.nextInt(CARDS_MAX);		
+				cardToGuess++;
+				
+				if (lastCard >= 10)
+				{
+					if (lastCard ==10 || lastCard ==11) 
+					{
+					JOptionPane.showMessageDialog(null, (firstTime == true? 
+							"The card is":"The card was") 
+							+ (lastCard==10? " a Jack." :" a Queen."));
+					}
+					if (lastCard ==12 || lastCard ==13) 
+					{
+						JOptionPane.showMessageDialog(null, (firstTime == true? 
+							"The card is":"The card was")  
+							+ (lastCard==12? " a King." :" an Ace."));
+					}
+				}
+				else if (lastCard <= 9 )	
+				{
+					lastCard++;
+					JOptionPane.showMessageDialog(null, (firstTime == true? 
+							"The card is a ":"The card was a ") + lastCard + ".");			
+					lastCard--;			
+				}
+				
+				if (finishGame == true)
+				{
+					finishAll = true; // To ensure that even if you input the wrong answer, you are shown the next card drawn randomly.
+				}
+				
+				if (count + 1 < MAX_GAMES && finishGame == false && finishAll == false)
+				{
+							while (correctInput == false) 
+							{
+								String input = JOptionPane.
+										showInputDialog(null, 
+												"Game: " + (count +1)  +  "\nDo you think the next card will be higher, lower or equal? ");
+								Scanner scanner = new Scanner( input );
+								
+								if (scanner.hasNext("equal")
+										|| scanner.hasNext("higher")|| scanner.hasNext("lower"))
+								{
+								
+									if (scanner.hasNext("equal"))
+									{
+												if (cardToGuess == lastCard) 
+												{
+													playerScore++;
+													correctInput = true;
+												}
+												else 
+												{
+													finishGame = true;
+													correctInput = true;
+												}
+								    }
+									else if (scanner.hasNext("lower"))
+									{
+												if (cardToGuess < lastCard) 
+												{
+													playerScore++;
+													correctInput = true;
+												}
+												else 
+												{
+													finishGame = true;
+													correctInput = true;
+												}
+									}
+									else if (scanner.hasNext("higher"))
+									{
+												if (cardToGuess > lastCard) 
+												{
+													playerScore++;
+													correctInput = true;
+												}
+												else 
+												{
+													finishGame = true;
+													correctInput = true;
+												}
+									}			
+								}
+								
+								else 
+								{
+									JOptionPane.showMessageDialog(null, "You must enter the words; "
+											+ "\n lower," + "\n higher,"+ "\n OR equal in lowercase...",
+											"Please try again.", JOptionPane.ERROR_MESSAGE);
+								}
+								
+								scanner.close();
+							}
+						
+				}
+					firstTime = false;
+					correctInput = false;
+					lastCard = cardToGuess;
+			  }
+			//  ---------  ---------   ---------  ---------  ---------   ---------  game ends   --------- ---------  ---------  ---------  ---------   ---------
+			
+			JOptionPane.showMessageDialog(null, "Your score is: " + playerScore);
+			
+			if	(playerScore >= 4)
+			{
+				wins++;
+				winStreak++;
+				JOptionPane.showMessageDialog(null, "Congratulations. You got them all correct.");
+			}
+			else 
+			{
+				JOptionPane.showMessageDialog(null, "You lost. Please try again.", null, JOptionPane.ERROR_MESSAGE);
+				winStreak = 0;
+			
+			}
+			
+			
+			int input = JOptionPane.showConfirmDialog(null, "The current win streak is: " + winStreak + 
+					 "\nYou have won " + wins + " times." + "\nWill you try again?", "Try again.", JOptionPane.YES_NO_OPTION);
+			
+			if (input == 1 || input == 2) 
+			{
+				tryAgain = false;
+
+			}
+			else
+			{
+				playerScore = 0;
+				finishGame = false;
+				finishAll = false;
+				firstTime = true;
+			}
+		}
+		
+
+
+		
+	}		
+	
+}
+
